@@ -201,42 +201,49 @@ export async function render(container) {
 }
 
 async function setupInitialState(container) {
-  const lastId = state.get('lastAnalysisId');
+  setupEventListeners(container);
+
   const emptyState = container.querySelector('#financial-empty-state');
   const content = container.querySelector('#financial-content');
 
-  if (!lastId) {
-    if (emptyState) emptyState.style.display = 'block';
-    if (content) content.style.display = 'none';
+  const getTariff = () => parseFloat(document.getElementById('fin-tariff')?.value || 6.0);
+  const getK = () => parseFloat(document.getElementById('fin-k-slider')?.value || 3.5);
 
-    container.querySelector('#btn-load-demo-financial')?.addEventListener('click', async () => {
-      showToast('Running demo analysis...', 'info');
-      try {
-        const res = await api.getDemoAnalysis(6.0, 3.5);
-        state.set('lastAnalysisId', res.analysis_id);
-        if (emptyState) emptyState.style.display = 'none';
-        if (content) content.style.display = 'block';
-        loadFinancialData(res);
-      } catch (e) {
-        showToast('Demo failed: ' + e.message, 'error');
-      }
-    });
+  async function loadDemo() {
+    try {
+      const res = await api.getDemoAnalysis(getTariff(), getK());
+      state.set('lastAnalysisId', res.analysis_id);
+      if (emptyState) emptyState.style.display = 'none';
+      if (content) content.style.display = 'block';
+      loadFinancialData(res);
+    } catch (e) {
+      if (emptyState) emptyState.style.display = 'block';
+      if (content) content.style.display = 'none';
+      showToast('Demo analysis failed: ' + e.message, 'error');
+    }
+  }
+
+  container.querySelector('#btn-load-demo-financial')?.addEventListener('click', async () => {
+    showToast('Running demo analysis...', 'info');
+    await loadDemo();
+  });
+
+  const lastId = state.get('lastAnalysisId');
+  if (!lastId) {
+    // Seamlessly load demo analysis so charts, cards, and daily shortfall graph render immediately
+    await loadDemo();
     return;
   }
 
-  if (emptyState) emptyState.style.display = 'none';
-  if (content) content.style.display = 'block';
-
   try {
-    const tariff = parseFloat(document.getElementById('fin-tariff')?.value || 6.0);
-    const k = parseFloat(document.getElementById('fin-k-slider')?.value || 3.5);
-    const data = await api.getAnalysis(lastId, tariff, k);
+    const data = await api.getAnalysis(lastId, getTariff(), getK());
+    if (emptyState) emptyState.style.display = 'none';
+    if (content) content.style.display = 'block';
     loadFinancialData(data);
   } catch (err) {
-    showToast('Failed to load analysis: ' + err.message, 'error');
+    console.warn('Active analysis expired or not found, falling back to demo analysis:', err);
+    await loadDemo();
   }
-
-  setupEventListeners(container);
 }
 
 function setupEventListeners(container) {
@@ -247,21 +254,21 @@ function setupEventListeners(container) {
   const copyBtn = container.querySelector('#btn-copy-summary');
   const calcBtn = container.querySelector('#btn-calc-convert');
 
-  kSlider.addEventListener('input', () => {
-    kVal.textContent = kSlider.value;
+  kSlider?.addEventListener('input', () => {
+    if (kVal) kVal.textContent = kSlider.value;
     scheduleRecomputeFinancial();
   });
 
-  tariffInput.addEventListener('input', scheduleRecomputeFinancial);
+  tariffInput?.addEventListener('input', scheduleRecomputeFinancial);
 
-  scopeFilter.addEventListener('change', () => {
+  scopeFilter?.addEventListener('change', () => {
     currentPlantScope = scopeFilter.value;
     updateHeadlineCards();
     updateCharts();
   });
 
-  copyBtn.addEventListener('click', copySummaryToClipboard);
-  calcBtn.addEventListener('click', runWhatIfCalculator);
+  copyBtn?.addEventListener('click', copySummaryToClipboard);
+  calcBtn?.addEventListener('click', runWhatIfCalculator);
 }
 
 function scheduleRecomputeFinancial() {
@@ -379,7 +386,10 @@ function updateCharts() {
       });
     }
 
-    if (dailyShortfallChart) dailyShortfallChart.destroy();
+    try {
+      if (dailyShortfallChart) dailyShortfallChart.destroy();
+    } catch (e) {}
+
     dailyShortfallChart = createBarChart(
       barCanvas.getContext('2d'),
       uniqueDates.map((d) => d.slice(5)), // MM-DD
@@ -389,7 +399,7 @@ function updateCharts() {
           x: { stacked: true },
           y: {
             stacked: true,
-            ticks: { callback: (v) => '₹' + v.toLocaleString() },
+            ticks: { callback: (v) => '₹' + Number(v || 0).toLocaleString() },
           },
         },
       }
@@ -411,7 +421,10 @@ function updateCharts() {
 
     const unflaggedSum = Math.max(0, totalSum - flaggedSum);
 
-    if (shortfallDonutChart) shortfallDonutChart.destroy();
+    try {
+      if (shortfallDonutChart) shortfallDonutChart.destroy();
+    } catch (e) {}
+
     shortfallDonutChart = createDoughnutChart(
       donutCanvas.getContext('2d'),
       ['Flagged Candidate Shortfall', 'Baseline / Expected Variance'],
@@ -427,7 +440,7 @@ function updateCharts() {
         plugins: {
           tooltip: {
             callbacks: {
-              label: (ctx) => ` ${ctx.label}: ₹${ctx.parsed.toLocaleString()}`,
+              label: (ctx) => ` ${ctx.label}: ₹${Number(ctx.parsed || 0).toLocaleString()}`,
             },
           },
         },
@@ -455,8 +468,8 @@ async function runWhatIfCalculator() {
 
     if (box) box.style.display = 'block';
 
-    const netKwh = res.net_kwh;
-    const netMoney = res.net_money;
+    const netKwh = res.net_kwh !== undefined ? res.net_kwh : (res.actual_kwh - res.expected_kwh);
+    const netMoney = res.net_money !== undefined ? res.net_money : (netKwh * tariff);
 
     if (kwhEl) {
       const sign = netKwh > 0 ? '+' : '';

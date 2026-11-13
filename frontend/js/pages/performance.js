@@ -317,33 +317,47 @@ async function checkResidualCharts(container) {
   const demoBtn = container.querySelector('#btn-load-perf-demo');
   const subtitle = container.querySelector('#residual-subtitle');
 
-  if (!lastId) {
-    if (demoBtn) {
-      demoBtn.style.display = 'inline-flex';
-      demoBtn.addEventListener('click', async () => {
-        demoBtn.disabled = true;
-        demoBtn.textContent = 'Running demo...';
-        try {
-          const res = await api.getDemoAnalysis(6.0, 3.5);
-          state.set('lastAnalysisId', res.analysis_id);
-          renderResidualVisuals(res);
-          demoBtn.style.display = 'none';
-        } catch (e) {
-          showToast('Failed to load demo: ' + e.message, 'error');
-        } finally {
-          demoBtn.disabled = false;
-        }
-      });
+  async function loadAndRenderDemo() {
+    try {
+      const res = await api.getDemoAnalysis(6.0, 3.5);
+      state.set('lastAnalysisId', res.analysis_id);
+      renderResidualVisuals(res);
+      if (subtitle) {
+        subtitle.textContent = `Generated from validation test batch (${res.rows_used.toLocaleString()} readings)`;
+      }
+      if (demoBtn) demoBtn.style.display = 'none';
+    } catch (e) {
+      if (demoBtn) demoBtn.style.display = 'inline-flex';
+      if (subtitle) subtitle.textContent = 'Click button to load demo analysis data.';
     }
-    if (subtitle) subtitle.textContent = 'No active analysis found. Click button to compute from demo dataset.';
+  }
+
+  if (demoBtn) {
+    demoBtn.addEventListener('click', async () => {
+      demoBtn.disabled = true;
+      demoBtn.textContent = 'Loading demo...';
+      await loadAndRenderDemo();
+      demoBtn.disabled = false;
+    });
+  }
+
+  if (!lastId) {
+    // Seamlessly load demo analysis so charts are immediately populated!
+    await loadAndRenderDemo();
     return;
   }
 
   try {
     const analysis = await api.getAnalysis(lastId, 6.0, 3.5);
     renderResidualVisuals(analysis);
+    if (subtitle) {
+      subtitle.textContent = `Generated from active batch analysis (${analysis.rows_used.toLocaleString()} readings)`;
+    }
+    if (demoBtn) demoBtn.style.display = 'none';
   } catch (err) {
-    if (demoBtn) demoBtn.style.display = 'inline-flex';
+    // If analysis id is stale/expired (e.g. 404), seamlessly load demo
+    console.warn('Active analysis expired, falling back to demo:', err);
+    await loadAndRenderDemo();
   }
 }
 
