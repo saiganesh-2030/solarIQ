@@ -7,7 +7,15 @@ from fastapi.staticfiles import StaticFiles
 
 from .config import FRONTEND_DIR
 from .services.model_service import model_service
-from .routers import health, predict
+from .routers import (
+    health,
+    predict,
+    anomaly,
+    analysis,
+    weather,
+    performance,
+    financial,
+)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -43,6 +51,11 @@ async def global_exception_handler(request: Request, exc: Exception):
 # Include API Routers
 app.include_router(health.router, prefix="/api")
 app.include_router(predict.router, prefix="/api")
+app.include_router(anomaly.router, prefix="/api")
+app.include_router(analysis.router, prefix="/api")
+app.include_router(weather.router, prefix="/api")
+app.include_router(performance.router, prefix="/api")
+app.include_router(financial.router, prefix="/api")
 
 # Static files for frontend
 index_path = FRONTEND_DIR / "index.html"
@@ -57,4 +70,3 @@ else:
             "health": "/api/health",
             "meta": "/api/meta"
         }
-
