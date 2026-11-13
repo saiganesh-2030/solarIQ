@@ -46,6 +46,15 @@
   animation: fadeInSlide 220ms ease forwards;
 }
 
+/* Micro-interactions */
+.btn:active, .btn-preset:active, .btn-range:active {
+  transform: scale(0.98);
+}
+
+.card {
+  animation: fadeInSlide 240ms ease backwards;
+}
+
 /* Skeleton Loading */
 .skeleton {
   background: linear-gradient(90deg, var(--surface-2) 25%, var(--border) 50%, var(--surface-2) 75%);

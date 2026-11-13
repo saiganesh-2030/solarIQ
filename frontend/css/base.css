@@ -62,6 +62,32 @@ button {
   background: none;
 }
 
+/* Accessibility Focus Ring */
+:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+/* Skip to Content Link */
+.skip-link {
+  position: absolute;
+  top: -60px;
+  left: 20px;
+  background: var(--orange);
+  color: #0d1117;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  z-index: 9999;
+  transition: top var(--transition-fast);
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 15px;
+  outline: 2px solid #ffffff;
+}
+
 code, kbd, samp, pre {
   font-family: var(--font-mono);
 }
