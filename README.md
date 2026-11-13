@@ -12,3 +12,4 @@ SolarIQ is an intelligent solar power monitoring and analysis platform combining
 - `frontend/`: Client application with 3D solar field visualization.
 - `postman/`: API collection and environment tests.
 - `scripts/`: Dev execution and artifact verification scripts.
+
