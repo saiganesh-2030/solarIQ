@@ -1,0 +1,856 @@
+{
+  "info": {
+    "_postman_id": "solariq-api-collection-v2",
+    "name": "SolarIQ API Collection",
+    "description": "End-to-end API tests for SolarIQ solar generation prediction and deviation analysis.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health and Meta",
+      "item": [
+        {
+          "name": "Check Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "health"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response time is reasonable\", () => pm.expect(pm.response.responseTime).to.be.below(2000));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Model is loaded\", () => {",
+                  "    pm.expect(json.status).to.eql(\"ok\");",
+                  "    pm.expect(json.model_loaded).to.be.true;",
+                  "    pm.expect(json.models).to.include(\"Plant 1\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Metadata",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/meta",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "meta"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Metadata contains defaults and features\", () => {",
+                  "    pm.expect(json.defaults.k).to.eql(3.5);",
+                  "    pm.expect(json.features).to.have.property(\"Plant 1\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Prediction",
+      "item": [
+        {
+          "name": "Predict Plant 1 Daytime",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/predict",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "predict"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"plant_id\": 4135001,\n  \"irradiation\": 0.8,\n  \"ambient_temp\": 30,\n  \"module_temp\": 50,\n  \"hour\": 12,\n  \"minute\": 0\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Valid predicted kW\", () => {",
+                  "    pm.expect(json.expected_kw).to.be.above(0);",
+                  "    pm.expect(json.plant_name).to.eql(\"Plant 1\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Predict Plant 1 Night",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/predict",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "predict"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"plant_id\": 4135001,\n  \"irradiation\": 0.0,\n  \"ambient_temp\": 20,\n  \"module_temp\": 18,\n  \"hour\": 2,\n  \"minute\": 0\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Night power is 0\", () => {",
+                  "    pm.expect(json.expected_kw).to.eql(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Predict Bad Plant ID",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/predict",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "predict"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"plant_id\": 9999999,\n  \"irradiation\": 0.8,\n  \"ambient_temp\": 30,\n  \"module_temp\": 50,\n  \"hour\": 12,\n  \"minute\": 0\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400 for invalid plant\", () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Typical Day Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/typical-day?plant_id=4135001",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "typical-day"
+              ],
+              "query": [
+                {
+                  "key": "plant_id",
+                  "value": "4135001"
+                },
+                {
+                  "key": "k",
+                  "value": "2"
+                },
+                {
+                  "key": "tariff",
+                  "value": "7"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"96 typical day slots returned\", () => {",
+                  "    pm.expect(json.length).to.eql(96);",
+                  "    pm.expect(json[0].time).to.eql(\"00:00\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Anomaly",
+      "item": [
+        {
+          "name": "Anomaly Flagged (Plant 2)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/anomaly",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "anomaly"
+              ],
+              "query": [
+                {
+                  "key": "plant_id",
+                  "value": "4135001"
+                },
+                {
+                  "key": "k",
+                  "value": "2"
+                },
+                {
+                  "key": "tariff",
+                  "value": "7"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"plant_id\": 4136001,\n  \"irradiation\": 0.49,\n  \"ambient_temp\": 31.2,\n  \"module_temp\": 39.9,\n  \"hour\": 13,\n  \"minute\": 0,\n  \"actual_kw\": 3078.35,\n  \"k\": 3.5\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Flagged as below expected\", () => {",
+                  "    pm.expect(json.flagged).to.be.true;",
+                  "    pm.expect(json.type).to.eql(\"Below expected\");",
+                  "    pm.expect(json.disclaimer).to.include(\"investigation candidate\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Anomaly Normal (Plant 1)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/anomaly",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "anomaly"
+              ],
+              "query": [
+                {
+                  "key": "plant_id",
+                  "value": "4135001"
+                },
+                {
+                  "key": "k",
+                  "value": "2"
+                },
+                {
+                  "key": "tariff",
+                  "value": "7"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"plant_id\": 4135001,\n  \"irradiation\": 0.8,\n  \"ambient_temp\": 30,\n  \"module_temp\": 50,\n  \"hour\": 12,\n  \"minute\": 0,\n  \"actual_kw\": 22849.0,\n  \"k\": 3.5\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Normal reading is not flagged\", () => {",
+                  "    pm.expect(json.flagged).to.be.false;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Anomaly Bad Input (Irradiation 5.0)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/anomaly",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "anomaly"
+              ],
+              "query": [
+                {
+                  "key": "plant_id",
+                  "value": "4135001"
+                },
+                {
+                  "key": "k",
+                  "value": "2"
+                },
+                {
+                  "key": "tariff",
+                  "value": "7"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"plant_id\": 4135001,\n  \"irradiation\": 5.0,\n  \"ambient_temp\": 30,\n  \"module_temp\": 50,\n  \"hour\": 12,\n  \"minute\": 0,\n  \"actual_kw\": 1000.0\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 422 for out of range irradiation\", () => pm.response.to.have.status(422));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Historical Analysis",
+      "item": [
+        {
+          "name": "Run Demo Analysis",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/demo-analysis",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "demo-analysis"
+              ],
+              "query": [
+                {
+                  "key": "plant_id",
+                  "value": "4135001"
+                },
+                {
+                  "key": "k",
+                  "value": "2"
+                },
+                {
+                  "key": "tariff",
+                  "value": "7"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Demo analysis returns id and flagged count\", () => {",
+                  "    pm.expect(json.analysis_id).to.be.a(\"string\");",
+                  "    pm.expect(json.summary.flagged_count).to.be.above(0);",
+                  "    pm.environment.set(\"analysis_id\", json.analysis_id);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Upload CSV File",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/upload",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "upload"
+              ],
+              "query": [
+                {
+                  "key": "plant_id",
+                  "value": "4135001"
+                },
+                {
+                  "key": "k",
+                  "value": "2"
+                },
+                {
+                  "key": "tariff",
+                  "value": "7"
+                }
+              ]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "ml/artifacts/demo_upload.csv",
+                  "description": "Select ml/artifacts/demo_upload.csv"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Demo analysis returns id and flagged count\", () => {",
+                  "    pm.expect(json.analysis_id).to.be.a(\"string\");",
+                  "    pm.expect(json.summary.flagged_count).to.be.above(0);",
+                  "    pm.environment.set(\"analysis_id\", json.analysis_id);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Recompute Analysis (k=2, tariff=7)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/analysis/{{analysis_id}}?k=2&tariff=7",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "analysis",
+                "{{analysis_id}}"
+              ],
+              "query": [
+                {
+                  "key": "plant_id",
+                  "value": "4135001"
+                },
+                {
+                  "key": "k",
+                  "value": "2"
+                },
+                {
+                  "key": "tariff",
+                  "value": "7"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Analysis recomputed with new k and tariff\", () => {",
+                  "    pm.expect(json.k).to.eql(2);",
+                  "    pm.expect(json.tariff).to.eql(7);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Download Analysis CSV",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/analysis/{{analysis_id}}/download",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "analysis",
+                "{{analysis_id}}",
+                "download"
+              ],
+              "query": [
+                {
+                  "key": "plant_id",
+                  "value": "4135001"
+                },
+                {
+                  "key": "k",
+                  "value": "2"
+                },
+                {
+                  "key": "tariff",
+                  "value": "7"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"CSV headers present\", () => {",
+                  "    pm.expect(pm.response.text()).to.include(\"DATE_TIME,PLANT,ACTUAL_KW\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Download Sample CSV Template",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sample-csv",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sample-csv"
+              ],
+              "query": [
+                {
+                  "key": "plant_id",
+                  "value": "4135001"
+                },
+                {
+                  "key": "k",
+                  "value": "2"
+                },
+                {
+                  "key": "tariff",
+                  "value": "7"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Weather",
+      "item": [
+        {
+          "name": "Get Weather Analysis",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/weather-analysis",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "weather-analysis"
+              ],
+              "query": [
+                {
+                  "key": "plant_id",
+                  "value": "4135001"
+                },
+                {
+                  "key": "k",
+                  "value": "2"
+                },
+                {
+                  "key": "tariff",
+                  "value": "7"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Weather correlations and associations present\", () => {",
+                  "    pm.expect(json).to.have.property(\"correlation_by_plant\");",
+                  "    pm.expect(json.note).to.include(\"associations\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Model Performance",
+      "item": [
+        {
+          "name": "Get Model Performance",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/model-performance",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "model-performance"
+              ],
+              "query": [
+                {
+                  "key": "plant_id",
+                  "value": "4135001"
+                },
+                {
+                  "key": "k",
+                  "value": "2"
+                },
+                {
+                  "key": "tariff",
+                  "value": "7"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Performance metrics and limits notice present\", () => {",
+                  "    pm.expect(json).to.have.property(\"test_random_forest\");",
+                  "    pm.expect(json.limits_note).to.include(\"one month\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Financial",
+      "item": [
+        {
+          "name": "Convert Financial Variance",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/financial/convert",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "financial",
+                "convert"
+              ],
+              "query": [
+                {
+                  "key": "plant_id",
+                  "value": "4135001"
+                },
+                {
+                  "key": "k",
+                  "value": "2"
+                },
+                {
+                  "key": "tariff",
+                  "value": "7"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"expected_kw\": 1000.0,\n  \"actual_kw\": 800.0,\n  \"tariff\": 6.0,\n  \"interval_hours\": 0.25\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Financial calculation accurate\", () => {",
+                  "    pm.expect(json.shortfall_kwh).to.eql(50.0);",
+                  "    pm.expect(json.shortfall_money).to.eql(300.0);",
+                  "    pm.expect(json.note).to.include(\"Estimate only\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
