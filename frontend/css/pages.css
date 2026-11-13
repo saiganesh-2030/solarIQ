@@ -134,3 +134,236 @@
     font-size: 34px;
   }
 }
+
+/* Prediction Result Card & Gauge */
+.prediction-result-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 30px 24px;
+  background: var(--surface-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(14px);
+}
+
+.gauge-wrapper {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 16px auto;
+}
+
+.gauge-svg {
+  transform: rotate(-90deg);
+  width: 100%;
+  height: 100%;
+}
+
+.gauge-bg {
+  fill: none;
+  stroke: var(--surface-2);
+  stroke-width: 14;
+}
+
+.gauge-progress {
+  fill: none;
+  stroke: url(#gaugeGradient);
+  stroke-width: 14;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 800ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gauge-center-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gauge-percent {
+  font-size: 26px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  color: var(--amber);
+}
+
+.gauge-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.kw-headline {
+  font-size: 42px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  color: var(--text);
+  letter-spacing: -1px;
+  margin: 12px 0 4px;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+}
+
+.kw-unit {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--amber);
+}
+
+/* Anomaly Bars & Presets */
+.preset-bar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.btn-preset {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-preset:hover {
+  border-color: var(--orange);
+  color: var(--text);
+  background: var(--surface);
+}
+
+.comparison-card {
+  padding: 24px;
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+
+.bar-track {
+  width: 100%;
+  height: 22px;
+  background: var(--surface);
+  border-radius: 11px;
+  overflow: hidden;
+  position: relative;
+  margin-top: 6px;
+  margin-bottom: 14px;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 11px;
+  transition: width 600ms ease;
+}
+
+.bar-fill-expected {
+  background: linear-gradient(90deg, var(--blue), #79b8ff);
+}
+
+.bar-fill-actual {
+  background: linear-gradient(90deg, var(--amber), var(--orange));
+}
+
+.disclaimer-card {
+  background: rgba(240, 136, 62, 0.08);
+  border: 1px solid rgba(240, 136, 62, 0.3);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 20px;
+}
+
+.disclaimer-icon {
+  font-size: 18px;
+  color: var(--orange);
+  line-height: 1;
+}
+
+/* Heatmap CSS Grid */
+.heatmap-container {
+  overflow-x: auto;
+  margin-top: 14px;
+}
+
+.heatmap-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 6px;
+}
+
+.heatmap-table th {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 8px;
+  text-align: center;
+}
+
+.heatmap-cell {
+  height: 52px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  transition: transform 150ms ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.heatmap-cell:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.chart-takeaway {
+  font-size: 12px;
+  color: var(--blue);
+  background: var(--blue-glow);
+  padding: 6px 12px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+/* Expandable details */
+.how-decided-details {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  margin-top: 20px;
+  font-size: 13px;
+}
+
+.how-decided-summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text);
+  outline: none;
+}
+
+.how-decided-summary::-webkit-details-marker {
+  color: var(--orange);
+}
+
+

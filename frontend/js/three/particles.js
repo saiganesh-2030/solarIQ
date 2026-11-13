@@ -40,3 +40,4 @@ export function createParticles(count = 200) {
     update,
   };
 }
+

@@ -90,3 +90,4 @@ export function initRouter() {
   window.addEventListener('hashchange', handleRoute);
   handleRoute();
 }
+

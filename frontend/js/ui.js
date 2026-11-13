@@ -78,3 +78,4 @@ export function renderErrorCard(message, onRetry) {
     </div>
   `;
 }
+

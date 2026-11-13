@@ -66,3 +66,4 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 6. Start Router
   initRouter();
 });
+

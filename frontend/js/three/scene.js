@@ -174,3 +174,4 @@ export function dispose() {
   document.removeEventListener('visibilitychange', onVisibilityChange);
   if (renderer) renderer.dispose();
 }
+

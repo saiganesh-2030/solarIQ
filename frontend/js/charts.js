@@ -52,3 +52,42 @@ export function createBarChart(ctx, labels, datasets, options = {}) {
     },
   });
 }
+
+export function createScatterChart(ctx, datasets, options = {}) {
+  return new Chart(ctx, {
+    type: 'scatter',
+    data: { datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top', labels: { boxWidth: 12, boxHeight: 12 } },
+      },
+      scales: {
+        x: {
+          type: 'linear',
+          position: 'bottom',
+        },
+      },
+      ...options,
+    },
+  });
+}
+
+export function createHorizontalBarChart(ctx, labels, datasets, options = {}) {
+  return new Chart(ctx, {
+    type: 'bar',
+    data: { labels, datasets },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top', labels: { boxWidth: 12, boxHeight: 12 } },
+      },
+      ...options,
+    },
+  });
+}
+
+

@@ -17,5 +17,11 @@ def get_weather_analysis():
             _weather_cache = json.load(f)
             if "note" not in _weather_cache:
                 _weather_cache["note"] = WEATHER_NOTE
+        fi_path = ARTIFACT_DIR / "feature_importance.json"
+        if fi_path.exists():
+            with open(fi_path, "r", encoding="utf-8") as f:
+                _weather_cache["feature_importance"] = json.load(f)
+        else:
+            _weather_cache["feature_importance"] = {}
     return _weather_cache
 

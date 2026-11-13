@@ -23,7 +23,21 @@ function jsonParse(str) {
   try { return JSON.parse(str); } catch (e) { return {}; }
 }
 
-export const state = loadState();
+export const state = {
+  ...loadState(),
+  get(key) {
+    if (key === 'selectedPlant') return this.plantId;
+    return this[key];
+  },
+  set(key, val) {
+    if (key === 'selectedPlant') {
+      const pid = val === 'all' ? 'all' : Number(val);
+      updateState({ plantId: pid, plantName: pid === 4136001 ? 'Plant 2' : 'Plant 1' });
+    } else {
+      updateState({ [key]: val });
+    }
+  },
+};
 
 export function updateState(partial) {
   Object.assign(state, partial);
@@ -42,3 +56,4 @@ export function setTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
   window.dispatchEvent(new CustomEvent('solariq:themechange', { detail: theme }));
 }
+
