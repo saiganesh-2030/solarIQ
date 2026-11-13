@@ -90,4 +90,21 @@ export function createHorizontalBarChart(ctx, labels, datasets, options = {}) {
   });
 }
 
+export function createDoughnutChart(ctx, labels, datasets, options = {}) {
+  return new Chart(ctx, {
+    type: 'doughnut',
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '65%',
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, boxHeight: 12 } },
+      },
+      ...options,
+    },
+  });
+}
+
+
 
