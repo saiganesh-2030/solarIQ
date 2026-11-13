@@ -154,3 +154,4 @@ Make sure the backend is active, then execute:
 ```bash
 npx newman run postman/SolarIQ.postman_collection.json -e postman/SolarIQ.local.postman_environment.json
 ```
+

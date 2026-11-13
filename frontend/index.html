@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SolarIQ — Solar Generation Intelligence</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f0883e'><circle cx='12' cy='12' r='5'/><path d='M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42' stroke='%23f0883e' stroke-width='2' stroke-linecap='round'/></svg>">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <!-- Three.js Import Map -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+    }
+  }
+  </script>
+
+  <!-- Pinned Chart.js 4.4.1 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <!-- Three.js Background Canvas & CSS Fallback -->
+  <canvas id="bg-canvas"></canvas>
+  <div class="canvas-fallback"></div>
+
+  <!-- App Wrapper -->
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo">⚡</div>
+        <span class="brand-text">SolarIQ</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#/" class="nav-link">
+          <span class="nav-icon">🏠</span>
+          <span class="nav-label">Overview</span>
+        </a>
+        <a href="#/prediction" class="nav-link">
+          <span class="nav-icon">🔮</span>
+          <span class="nav-label">Prediction</span>
+        </a>
+        <a href="#/anomaly" class="nav-link">
+          <span class="nav-icon">🔍</span>
+          <span class="nav-label">Anomaly Detection</span>
+        </a>
+        <a href="#/weather" class="nav-link">
+          <span class="nav-icon">☀️</span>
+          <span class="nav-label">Weather Analysis</span>
+        </a>
+        <a href="#/historical" class="nav-link">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">Historical Analysis</span>
+        </a>
+        <a href="#/performance" class="nav-link">
+          <span class="nav-icon">📈</span>
+          <span class="nav-label">Model Performance</span>
+        </a>
+        <a href="#/financial" class="nav-link">
+          <span class="nav-icon">💰</span>
+          <span class="nav-label">Financial Impact</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <label class="form-label" style="margin: 0; display: inline-flex; align-items: center; gap: 8px;">
+            <span>Plant:</span>
+            <select id="topbar-plant-select" class="form-select" style="width: auto; padding: 6px 12px;">
+              <option value="4135001">Plant 1</option>
+              <option value="4136001">Plant 2</option>
+            </select>
+          </label>
+
+          <label class="form-label" style="margin: 0; display: inline-flex; align-items: center; gap: 8px;">
+            <span>Tariff:</span>
+            <div style="display: inline-flex; align-items: center; gap: 4px;">
+              <span style="font-weight: 600; color: var(--amber);">₹</span>
+              <input type="number" id="topbar-tariff-input" class="form-control" style="width: 72px; padding: 6px 8px;" step="0.5" min="0" max="1000">
+              <span style="font-size: 11px; color: var(--text-dim);">/kWh</span>
+            </div>
+          </label>
+        </div>
+
+        <div class="topbar-right">
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted);">
+            <span id="api-status-dot" class="status-dot"></span>
+            <span id="api-status-text">Connecting...</span>
+          </div>
+
+          <button id="theme-toggle" class="btn btn-secondary" title="Toggle Theme" style="padding: 6px 10px; font-size: 14px;">☀️</button>
+        </div>
+      </header>
+
+      <!-- Main Dynamic Content -->
+      <main id="app">
+        <!-- Rendered by Hash Router -->
+      </main>
+
+      <!-- Footer -->
+      <footer class="app-footer">
+        <div>
+          SolarIQ &copy; 2026. Solar Power Generation & Performance Deviation Analysis.
+        </div>
+        <div style="color: var(--amber);">
+          Notice: Trained on about one month of data (15 May to 17 Jun 2020). Results should not be assumed to hold in other seasons.
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Main ES Module -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

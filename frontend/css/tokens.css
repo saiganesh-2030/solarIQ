@@ -1,0 +1,76 @@
+/* Design Tokens: GitHub Dark Theme with Solar Accents */
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface-2: #1c2230;
+  --surface-glass: rgba(22, 27, 34, 0.75);
+  --border: #30363d;
+  --border-muted: #21262d;
+  --text: #e6edf3;
+  --text-muted: #8b949e;
+  --text-dim: #6e7681;
+
+  /* Accent Palette */
+  --green: #3fb950;
+  --green-glow: rgba(63, 185, 80, 0.2);
+  --blue: #58a6ff;
+  --blue-glow: rgba(88, 166, 255, 0.2);
+  --amber: #f2cc60;
+  --amber-glow: rgba(242, 204, 96, 0.25);
+  --orange: #f0883e;
+  --red: #f85149;
+  --red-glow: rgba(248, 81, 73, 0.2);
+  --purple: #a371f7;
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Sizing & Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --sidebar-w: 240px;
+  --sidebar-collapsed-w: 68px;
+  --topbar-h: 60px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow: 400ms ease;
+}
+
+[data-theme="light"] {
+  --bg: #f6f8fa;
+  --surface: #ffffff;
+  --surface-2: #f0f2f5;
+  --surface-glass: rgba(255, 255, 255, 0.85);
+  --border: #d0d7de;
+  --border-muted: #e1e4e8;
+  --text: #1f2328;
+  --text-muted: #656d76;
+  --text-dim: #8c959f;
+
+  --green: #1a7f37;
+  --green-glow: rgba(26, 127, 55, 0.15);
+  --blue: #0969da;
+  --blue-glow: rgba(9, 105, 218, 0.15);
+  --amber: #9a6700;
+  --amber-glow: rgba(154, 103, 0, 0.15);
+  --orange: #bc4c00;
+  --red: #cf222e;
+  --red-glow: rgba(207, 34, 46, 0.15);
+  --purple: #8250df;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.12);
+  --shadow-glass: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
