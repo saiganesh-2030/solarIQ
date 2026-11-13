@@ -1,0 +1,23 @@
+{
+  "tariff": 6.0,
+  "by_plant": [
+    {
+      "PLANT": "Plant 1",
+      "expected_kwh": 861802.7,
+      "actual_kwh": 883301.4,
+      "net_kwh": 21498.7,
+      "flagged_shortfall_kwh": 113.9,
+      "net_money": 128992.1,
+      "flagged_shortfall_money": 683.6
+    },
+    {
+      "PLANT": "Plant 2",
+      "expected_kwh": 623468.2,
+      "actual_kwh": 647268.8,
+      "net_kwh": 23800.5,
+      "flagged_shortfall_kwh": 27589.9,
+      "net_money": 142803.3,
+      "flagged_shortfall_money": 165539.2
+    }
+  ]
+}

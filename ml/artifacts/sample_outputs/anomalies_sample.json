@@ -1,0 +1,82 @@
+[
+  {
+    "DATE_TIME": "2020-06-12 11:45:00",
+    "PLANT": "Plant 2",
+    "AC_POWER": 12837.9,
+    "PREDICTED": 8642.93,
+    "PCT_DEV": 48.54,
+    "TYPE": "Above expected"
+  },
+  {
+    "DATE_TIME": "2020-06-12 12:15:00",
+    "PLANT": "Plant 2",
+    "AC_POWER": 13020.36,
+    "PREDICTED": 8422.78,
+    "PCT_DEV": 54.59,
+    "TYPE": "Above expected"
+  },
+  {
+    "DATE_TIME": "2020-06-12 12:30:00",
+    "PLANT": "Plant 2",
+    "AC_POWER": 12793.04,
+    "PREDICTED": 8435.6,
+    "PCT_DEV": 51.66,
+    "TYPE": "Above expected"
+  },
+  {
+    "DATE_TIME": "2020-06-12 13:00:00",
+    "PLANT": "Plant 2",
+    "AC_POWER": 3078.35,
+    "PREDICTED": 12256.02,
+    "PCT_DEV": -74.88,
+    "TYPE": "Below expected"
+  },
+  {
+    "DATE_TIME": "2020-06-13 09:45:00",
+    "PLANT": "Plant 2",
+    "AC_POWER": 5864.74,
+    "PREDICTED": 15416.64,
+    "PCT_DEV": -61.96,
+    "TYPE": "Below expected"
+  },
+  {
+    "DATE_TIME": "2020-06-13 10:30:00",
+    "PLANT": "Plant 2",
+    "AC_POWER": 3506.09,
+    "PREDICTED": 13866.71,
+    "PCT_DEV": -74.72,
+    "TYPE": "Below expected"
+  },
+  {
+    "DATE_TIME": "2020-06-13 10:45:00",
+    "PLANT": "Plant 2",
+    "AC_POWER": 0.0,
+    "PREDICTED": 11914.15,
+    "PCT_DEV": -100.0,
+    "TYPE": "Zero reading (possible data gap)"
+  },
+  {
+    "DATE_TIME": "2020-06-13 11:00:00",
+    "PLANT": "Plant 2",
+    "AC_POWER": 7473.69,
+    "PREDICTED": 13293.85,
+    "PCT_DEV": -43.78,
+    "TYPE": "Below expected"
+  },
+  {
+    "DATE_TIME": "2020-06-13 13:45:00",
+    "PLANT": "Plant 2",
+    "AC_POWER": 5923.23,
+    "PREDICTED": 9068.8,
+    "PCT_DEV": -34.69,
+    "TYPE": "Below expected"
+  },
+  {
+    "DATE_TIME": "2020-06-14 12:45:00",
+    "PLANT": "Plant 2",
+    "AC_POWER": 15244.79,
+    "PREDICTED": 9887.27,
+    "PCT_DEV": 54.19,
+    "TYPE": "Above expected"
+  }
+]

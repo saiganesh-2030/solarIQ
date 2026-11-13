@@ -1,0 +1,115 @@
+{
+  "split": {
+    "test": [
+      "2020-06-12",
+      "2020-06-17"
+    ],
+    "train": [
+      "2020-05-15",
+      "2020-06-06"
+    ],
+    "validation": [
+      "2020-06-07",
+      "2020-06-11"
+    ]
+  },
+  "features": {
+    "Plant 1": [
+      "IRRADIATION",
+      "AMBIENT_TEMPERATURE",
+      "MODULE_TEMPERATURE"
+    ],
+    "Plant 2": [
+      "IRRADIATION",
+      "AMBIENT_TEMPERATURE",
+      "MODULE_TEMPERATURE"
+    ]
+  },
+  "best_params": {
+    "Plant 1": {
+      "max_depth": null,
+      "min_samples_leaf": 3
+    },
+    "Plant 2": {
+      "max_depth": null,
+      "min_samples_leaf": 5
+    }
+  },
+  "validation_all_models": [
+    {
+      "Plant": "Plant 1",
+      "Model": "Linear Regression",
+      "MAE": 489.6543,
+      "RMSE": 980.1172,
+      "R2": 0.9866,
+      "NRMSE_%": 14.8429
+    },
+    {
+      "Plant": "Plant 1",
+      "Model": "SVR",
+      "MAE": 412.6847,
+      "RMSE": 823.2816,
+      "R2": 0.9906,
+      "NRMSE_%": 12.4678
+    },
+    {
+      "Plant": "Plant 1",
+      "Model": "Random Forest",
+      "MAE": 342.7448,
+      "RMSE": 785.0712,
+      "R2": 0.9914,
+      "NRMSE_%": 11.8891
+    },
+    {
+      "Plant": "Plant 2",
+      "Model": "Linear Regression",
+      "MAE": 1575.2091,
+      "RMSE": 2575.9852,
+      "R2": 0.8199,
+      "NRMSE_%": 53.3878
+    },
+    {
+      "Plant": "Plant 2",
+      "Model": "SVR",
+      "MAE": 779.0861,
+      "RMSE": 1992.5393,
+      "R2": 0.8922,
+      "NRMSE_%": 41.2958
+    },
+    {
+      "Plant": "Plant 2",
+      "Model": "Random Forest",
+      "MAE": 808.5718,
+      "RMSE": 1979.8215,
+      "R2": 0.8936,
+      "NRMSE_%": 41.0322
+    }
+  ],
+  "test_random_forest": [
+    {
+      "Plant": "Plant 1",
+      "MAE": 270.8511,
+      "RMSE": 539.172,
+      "R2": 0.9955,
+      "NRMSE_%": 8.7593
+    },
+    {
+      "Plant": "Plant 2",
+      "MAE": 885.8825,
+      "RMSE": 1918.2227,
+      "R2": 0.882,
+      "NRMSE_%": 42.6753
+    }
+  ],
+  "threshold_pct": {
+    "Plant 1": [
+      -20.5233549488917,
+      22.340006314917613
+    ],
+    "Plant 2": [
+      -32.30175264908281,
+      46.90480836474741
+    ]
+  },
+  "note": "About one month of data (15 May to 17 Jun 2020), do not assume it holds in other seasons."
+}
